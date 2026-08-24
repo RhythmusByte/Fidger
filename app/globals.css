@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --fidgerBg: #08060f;
+  --fidgerBgElevated: #0f0b1e;
+  --fidgerPanel: rgba(255, 255, 255, 0.04);
+  --fidgerPanelBorder: rgba(168, 121, 255, 0.18);
+  --fidgerAccent: #a855f7;
+  --fidgerAccentSoft: #7c3aed;
+  --fidgerAccentGlow: rgba(168, 85, 247, 0.35);
+  --fidgerPositive: #34d399;
+  --fidgerCaution: #fb923c;
+  --fidgerInfo: #60a5fa;
+  --fidgerNavy: #101427;
+  --fidgerNegative: #f87171;
+  --fidgerText: #f1eefc;
+  --fidgerTextMuted: #a79fc2;
+  --fidgerTextFaint: #7c7594;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--fidgerBg);
+  color: var(--fidgerText);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(124, 58, 237, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.12), transparent 40%);
+  background-attachment: fixed;
+}
+
+.fidgerCard {
+  background: var(--fidgerPanel);
+  border: 1px solid var(--fidgerPanelBorder);
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.fidgerCard:hover {
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.18);
+}
+
+.fidgerHelperText {
+  font-size: 12px;
+  color: var(--fidgerTextMuted);
+}
+
+.fidgerTouchTarget {
+  min-height: 44px;
+}
+
+.fidgerButtonPrimary {
+  background: linear-gradient(135deg, var(--fidgerAccentSoft), var(--fidgerAccent));
+  color: white;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 18px var(--fidgerAccentGlow);
+}
+
+.fidgerButtonPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--fidgerAccentGlow);
+}
+
+.fidgerButtonPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.fidgerButtonSecondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fidgerText);
+  border: 1px solid var(--fidgerPanelBorder);
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.fidgerInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fidgerPanelBorder);
+  border-radius: 10px;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 15px;
+  color: var(--fidgerText);
+  width: 100%;
+}
+
+.fidgerInput:focus {
+  outline: none;
+  border-color: var(--fidgerAccent);
+}
+
+.fidgerFadeIn {
+  animation: fidgerFadeIn 0.25s ease both;
+}
+
+@keyframes fidgerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fidgerPositiveText {
+  color: var(--fidgerPositive);
+}
+
+.fidgerCautionText {
+  color: var(--fidgerCaution);
+}
+
+.fidgerInfoText {
+  color: var(--fidgerInfo);
+}
+
+.fidgerNegativeText {
+  color: var(--fidgerNegative);
+}
