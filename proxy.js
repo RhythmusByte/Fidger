@@ -3,7 +3,7 @@ import { jwtVerify } from "jose";
 
 const SESSION_COOKIE_NAME = "fidgerSession";
 
-const publicPaths = ["/login", "/api/auth/login"];
+const publicPaths = ["/login", "/api/auth/login", "/api/health/env"];
 
 function isCronPath(pathname) {
   return pathname.startsWith("/api/cron/");
