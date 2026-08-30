@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Pencil, Trash2, Download, ArrowRightLeft, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import Nav from "../../components/Nav";
 import AccountsSection from "../../components/AccountsSection";
 import BudgetsSection from "../../components/BudgetsSection";
@@ -201,14 +203,26 @@ export default function FinancePage() {
       <Nav />
 
       <main className="max-w-lg mx-auto px-4 py-4">
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 mb-4 text-center transition-colors">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+        <motion.div
+          layout
+          className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-4 mb-4 text-center transition-colors"
+        >
+          <p className="text-xs text-zinc-500 dark:text-ink-muted">
             Total balance across all accounts
           </p>
-          <p className="text-2xl font-bold dark:text-slate-100">
-            {totalBalance.toFixed(2)}
-          </p>
-        </div>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={totalBalance.toFixed(2)}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.2 }}
+              className="text-2xl font-bold text-zinc-950 dark:text-ink"
+            >
+              {totalBalance.toFixed(2)}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
 
         <AccountsSection
           accounts={accounts}
@@ -226,16 +240,16 @@ export default function FinancePage() {
         />
 
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center transition-colors">
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-3 text-center transition-colors">
+            <p className="text-xs text-zinc-500 dark:text-ink-muted">
               Income this month
             </p>
             <p className="font-semibold text-green-600 dark:text-green-400">
               {totalIncome.toFixed(2)}
             </p>
           </div>
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center transition-colors">
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-3 text-center transition-colors">
+            <p className="text-xs text-zinc-500 dark:text-ink-muted">
               Expense this month
             </p>
             <p className="font-semibold text-red-600 dark:text-red-400">
@@ -257,27 +271,48 @@ export default function FinancePage() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 mb-4 space-y-3 transition-colors"
+          className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-4 mb-4 space-y-3 transition-colors"
         >
           <div className="flex gap-2">
-            {["expense", "income", "transfer"].map((t) => (
-              <button
+            {["expense", "income", "transfer"].map((t) => {
+              const TIcon = t === "expense" ? ArrowDownCircle : t === "income" ? ArrowUpCircle : ArrowRightLeft;
+              return (
+              <motion.button
                 key={t}
                 type="button"
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setForm({ ...form, type: t })}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium capitalize ${
+                className={`relative flex items-center justify-center gap-1.5 flex-1 py-2 rounded-lg text-sm font-medium capitalize overflow-hidden ${
                   form.type === t
                     ? t === "expense"
-                      ? "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300"
+                      ? "text-red-700 dark:text-red-300"
                       : t === "income"
-                      ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300"
-                      : "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
-                    : "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                      ? "text-green-700 dark:text-green-300"
+                      : "text-accent-hover dark:text-accent"
+                    : "text-zinc-500 dark:text-ink-muted"
                 }`}
               >
+                {form.type === t && (
+                  <motion.span
+                    layoutId="type-pill"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+                    className={`absolute inset-0 -z-10 ${
+                      t === "expense"
+                        ? "bg-red-100 dark:bg-red-900/40"
+                        : t === "income"
+                        ? "bg-green-100 dark:bg-green-900/40"
+                        : "bg-accent/10 dark:bg-accent/20"
+                    }`}
+                  />
+                )}
+                {form.type !== t && (
+                  <span className="absolute inset-0 -z-10 bg-zinc-50 dark:bg-surface-elevated rounded-lg" />
+                )}
+                <TIcon size={15} strokeWidth={2} />
                 {t}
-              </button>
-            ))}
+              </motion.button>
+              );
+            })}
           </div>
 
           <input
@@ -287,7 +322,7 @@ export default function FinancePage() {
             required
             value={form.amount}
             onChange={(e) => setForm({ ...form, amount: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
           />
 
           {form.type === "transfer" ? (
@@ -296,7 +331,7 @@ export default function FinancePage() {
                 required
                 value={form.fromAccountId}
                 onChange={(e) => setForm({ ...form, fromAccountId: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 <option value="">From account</option>
                 {accounts.map((a) => (
@@ -307,7 +342,7 @@ export default function FinancePage() {
                 required
                 value={form.toAccountId}
                 onChange={(e) => setForm({ ...form, toAccountId: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 <option value="">To account</option>
                 {accounts.map((a) => (
@@ -321,7 +356,7 @@ export default function FinancePage() {
                 required
                 value={form.accountId}
                 onChange={(e) => setForm({ ...form, accountId: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 <option value="">Account</option>
                 {accounts.map((a) => (
@@ -334,7 +369,7 @@ export default function FinancePage() {
                 required
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </>
           )}
@@ -344,7 +379,7 @@ export default function FinancePage() {
             required
             value={form.date}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
           />
 
           <input
@@ -352,16 +387,17 @@ export default function FinancePage() {
             placeholder="Note (optional)"
             value={form.note}
             onChange={(e) => setForm({ ...form, note: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
           />
 
           <div className="flex gap-2">
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
               type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700"
+              className="flex-1 bg-accent text-white py-2 rounded-lg font-medium hover:bg-accent-hover"
             >
               {editingId ? "Update" : "Add"}
-            </button>
+            </motion.button>
             {editingId && (
               <button
                 type="button"
@@ -369,7 +405,7 @@ export default function FinancePage() {
                   setEditingId(null);
                   resetForm();
                 }}
-                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+                className="px-4 py-2 rounded-lg bg-zinc-50 dark:bg-surface-elevated text-zinc-700 dark:text-ink-muted"
               >
                 Cancel
               </button>
@@ -378,40 +414,47 @@ export default function FinancePage() {
         </form>
 
         <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold text-slate-700 dark:text-slate-200">
+          <h2 className="font-semibold text-zinc-800 dark:text-ink">
             Transactions this month
           </h2>
           <button
             onClick={handleExport}
-            className="text-xs text-blue-600 dark:text-blue-400 font-medium"
+            className="flex items-center gap-1 text-xs text-accent dark:text-accent font-medium"
           >
+            <Download size={13} strokeWidth={2} />
             Export JSON
           </button>
         </div>
 
         {loading ? (
-          <p className="text-sm text-slate-400">Loading...</p>
+          <p className="text-sm text-zinc-400">Loading...</p>
         ) : monthTransactions.length === 0 ? (
-          <p className="text-sm text-slate-400">No transactions this month.</p>
+          <p className="text-sm text-zinc-400">No transactions this month.</p>
         ) : (
           <ul className="space-y-2">
+            <AnimatePresence initial={false}>
             {monthTransactions.map((t) => (
-              <li
+              <motion.li
                 key={t._id}
-                className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 flex items-center justify-between transition-colors"
+                layout
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: 40 }}
+                transition={{ duration: 0.2 }}
+                className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-3 flex items-center justify-between transition-colors"
               >
                 <div>
-                  <p className="text-sm font-medium dark:text-slate-100">
+                  <p className="text-sm font-medium dark:text-ink">
                     {t.type === "transfer"
                       ? `${accountName(t.fromAccountId)} \u2192 ${accountName(t.toAccountId)}`
                       : t.category}{" "}
-                    <span className="text-xs text-slate-400">{t.date}</span>
+                    <span className="text-xs text-zinc-400">{t.date}</span>
                   </p>
                   {t.type !== "transfer" && (
-                    <p className="text-xs text-slate-400">{accountName(t.accountId)}</p>
+                    <p className="text-xs text-zinc-400">{accountName(t.accountId)}</p>
                   )}
                   {t.note && (
-                    <p className="text-xs text-slate-400">{t.note}</p>
+                    <p className="text-xs text-zinc-400">{t.note}</p>
                   )}
                 </div>
                 <div className="flex items-center gap-3">
@@ -421,7 +464,7 @@ export default function FinancePage() {
                         ? "text-green-600 dark:text-green-400"
                         : t.type === "expense"
                         ? "text-red-600 dark:text-red-400"
-                        : "text-blue-600 dark:text-blue-400"
+                        : "text-accent dark:text-accent"
                     }`}
                   >
                     {t.type === "income" ? "+" : t.type === "expense" ? "-" : ""}
@@ -429,19 +472,22 @@ export default function FinancePage() {
                   </span>
                   <button
                     onClick={() => startEdit(t)}
-                    className="text-xs text-slate-400"
+                    aria-label="Edit transaction"
+                    className="text-zinc-400 hover:text-accent dark:hover:text-accent"
                   >
-                    Edit
+                    <Pencil size={14} strokeWidth={1.75} />
                   </button>
                   <button
                     onClick={() => handleDelete(t._id)}
-                    className="text-xs text-red-400"
+                    aria-label="Delete transaction"
+                    className="text-red-300 hover:text-red-500"
                   >
-                    Delete
+                    <Trash2 size={14} strokeWidth={1.75} />
                   </button>
                 </div>
-              </li>
+              </motion.li>
             ))}
+            </AnimatePresence>
           </ul>
         )}
       </main>
