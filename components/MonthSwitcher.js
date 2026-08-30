@@ -1,5 +1,8 @@
 "use client";
 
+import { motion, AnimatePresence } from "motion/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 export default function MonthSwitcher({ year, month, onChange }) {
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -20,22 +23,37 @@ export default function MonthSwitcher({ year, month, onChange }) {
   }
 
   return (
-    <div className="flex items-center justify-between mb-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 transition-colors">
-      <button
+    <div className="flex items-center justify-between mb-4 bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border px-2 py-2 transition-colors">
+      <motion.button
+        whileTap={{ scale: 0.9 }}
         onClick={() => shift(-1)}
-        className="text-slate-500 dark:text-slate-400 px-2"
+        aria-label="Previous month"
+        className="p-1.5 rounded-lg text-zinc-400 hover:text-accent dark:hover:text-accent hover:bg-zinc-50 dark:hover:bg-surface-elevated transition-colors"
       >
-        {"\u2039"}
-      </button>
-      <span className="font-medium text-sm dark:text-slate-100">
-        {monthNames[month]} {year}
-      </span>
-      <button
+        <ChevronLeft size={18} strokeWidth={2} />
+      </motion.button>
+      <div className="overflow-hidden relative h-5 flex items-center">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={`${year}-${month}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="font-medium text-sm dark:text-ink block"
+          >
+            {monthNames[month]} {year}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <motion.button
+        whileTap={{ scale: 0.9 }}
         onClick={() => shift(1)}
-        className="text-slate-500 dark:text-slate-400 px-2"
+        aria-label="Next month"
+        className="p-1.5 rounded-lg text-zinc-400 hover:text-accent dark:hover:text-accent hover:bg-zinc-50 dark:hover:bg-surface-elevated transition-colors"
       >
-        {"\u203A"}
-      </button>
+        <ChevronRight size={18} strokeWidth={2} />
+      </motion.button>
     </div>
   );
 }
