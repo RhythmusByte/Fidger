@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { motion } from "motion/react";
+import { Wallet, StickyNote, CheckSquare, LogOut } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
-  { href: "/finance", label: "Finance", icon: "\u{1F4B0}" },
-  { href: "/notes", label: "Notes", icon: "\u{1F4DD}" },
-  { href: "/todos", label: "To-dos", icon: "\u2705" },
+  { href: "/finance", label: "Finance", Icon: Wallet },
+  { href: "/notes", label: "Notes", Icon: StickyNote },
+  { href: "/todos", label: "To-dos", Icon: CheckSquare },
 ];
 
 export default function Nav() {
@@ -16,36 +18,42 @@ export default function Nav() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 transition-colors">
-        <span className="font-semibold text-slate-800 dark:text-slate-100">
+      <header className="flex items-center justify-between px-4 py-3 bg-white dark:bg-surface border-b border-zinc-200 dark:border-surface-border sticky top-0 z-10 transition-colors">
+        <span className="font-semibold text-zinc-950 dark:text-ink tracking-tight">
           My Space
         </span>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="text-sm text-slate-500 dark:text-slate-400 hover:text-red-600"
+            aria-label="Sign out"
+            className="p-2 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-zinc-50 dark:hover:bg-surface-card transition-colors"
           >
-            Sign out
+            <LogOut size={18} strokeWidth={1.75} />
           </button>
         </div>
       </header>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-around py-2 z-10 transition-colors">
-        {links.map((link) => {
-          const active = pathname.startsWith(link.href);
+      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-surface border-t border-zinc-200 dark:border-surface-border flex justify-around py-1.5 z-10 transition-colors">
+        {links.map(({ href, label, Icon }) => {
+          const active = pathname.startsWith(href);
           return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex flex-col items-center text-xs px-4 py-1 rounded-lg ${
-                active
-                  ? "text-blue-600 dark:text-blue-400 font-semibold"
-                  : "text-slate-500 dark:text-slate-400"
-              }`}
-            >
-              <span className="text-lg">{link.icon}</span>
-              {link.label}
+            <Link key={href} href={href} className="relative flex flex-col items-center gap-0.5 text-xs px-5 py-1.5 rounded-lg">
+              {active && (
+                <motion.span
+                  layoutId="nav-active"
+                  transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
+                  className="absolute inset-0 bg-accent/10 dark:bg-accent/15 rounded-lg -z-10"
+                />
+              )}
+              <Icon
+                size={20}
+                strokeWidth={active ? 2.25 : 1.75}
+                className={active ? "text-accent dark:text-accent" : "text-zinc-400 dark:text-ink0"}
+              />
+              <span className={active ? "text-accent dark:text-accent font-medium" : "text-zinc-400 dark:text-ink0"}>
+                {label}
+              </span>
             </Link>
           );
         })}
