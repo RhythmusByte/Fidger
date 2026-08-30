@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#2e1065",
 };
 
 export default function RootLayout({ children }) {
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <head>
         <ThemeScript />
       </head>
-      <body className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen transition-colors">
+      <body className="bg-zinc-50 dark:bg-surface text-zinc-950 dark:text-ink min-h-screen transition-colors">
         <Providers>{children}</Providers>
       </body>
     </html>
