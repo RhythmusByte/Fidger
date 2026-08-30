@@ -36,15 +36,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-surface dark:via-surface-card dark:to-surface transition-colors">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white p-6 rounded-2xl shadow-sm border border-slate-200"
+        className="w-full max-w-sm bg-white dark:bg-surface-card p-6 rounded-2xl shadow-sm border border-zinc-200 dark:border-surface-border transition-colors text-zinc-950 dark:text-ink"
       >
         <h1 className="text-xl font-semibold mb-2 text-center">
           Create account
         </h1>
-        <p className="text-xs text-slate-500 mb-6 text-center">
+        <p className="text-xs text-zinc-500 dark:text-ink-muted mb-6 text-center">
           This page is not linked anywhere in the app. Keep this URL private.
         </p>
 
@@ -65,7 +65,7 @@ export default function RegisterPage() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full mb-4 px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
         />
 
         <label className="block text-sm font-medium mb-1">Email</label>
@@ -74,7 +74,7 @@ export default function RegisterPage() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full mb-4 px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
         />
 
         <label className="block text-sm font-medium mb-1">
@@ -86,13 +86,13 @@ export default function RegisterPage() {
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full mb-6 px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-accent text-white py-2 rounded-lg font-medium hover:bg-accent-hover disabled:opacity-50"
         >
           {loading ? "Creating..." : "Create account"}
         </button>
