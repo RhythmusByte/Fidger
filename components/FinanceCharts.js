@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import {
   PieChart,
   Pie,
@@ -14,15 +15,17 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#3b82f6",
-  "#ef4444",
+  "#9333ea",
+  "#c084fc",
+  "#f472b6",
+  "#a78bfa",
   "#f59e0b",
   "#10b981",
-  "#8b5cf6",
+  "#6366f1",
   "#ec4899",
-  "#06b6d4",
-  "#84cc16",
 ];
+
+const AXIS_COLOR = "#71717a";
 
 export default function FinanceCharts({ spendingByCategory, balanceTrend }) {
   const pieData = Object.entries(spendingByCategory)
@@ -32,8 +35,13 @@ export default function FinanceCharts({ spendingByCategory, balanceTrend }) {
   return (
     <div className="grid grid-cols-1 gap-4 mb-4">
       {pieData.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 transition-colors">
-          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-4 transition-colors"
+        >
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-ink mb-2">
             Spending by category
           </h3>
           <ResponsiveContainer width="100%" height={220}>
@@ -46,6 +54,7 @@ export default function FinanceCharts({ spendingByCategory, balanceTrend }) {
                 cy="50%"
                 outerRadius={80}
                 label={({ name }) => name}
+                animationDuration={500}
               >
                 {pieData.map((_, i) => (
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -57,30 +66,36 @@ export default function FinanceCharts({ spendingByCategory, balanceTrend }) {
               />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
       )}
 
       {balanceTrend.length > 1 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 transition-colors">
-          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-4 transition-colors"
+        >
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-ink mb-2">
             Balance trend
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={balanceTrend}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-              <YAxis tick={{ fontSize: 10 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke={AXIS_COLOR} opacity={0.2} />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: AXIS_COLOR }} />
+              <YAxis tick={{ fontSize: 10, fill: AXIS_COLOR }} />
               <Tooltip formatter={(value) => value.toFixed(2)} />
               <Line
                 type="monotone"
                 dataKey="balance"
-                stroke="#3b82f6"
+                stroke="#9333ea"
                 strokeWidth={2}
                 dot={false}
+                animationDuration={500}
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
       )}
     </div>
   );
