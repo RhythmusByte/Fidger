@@ -17,17 +17,25 @@ export async function PUT(request, { params }) {
   }
 
   const body = await request.json();
-  const { type, amount, category, date, note } = body;
+  const { type, amount, category, date, note, accountId, fromAccountId, toAccountId } = body;
 
   const update = {};
   if (type) update.type = type;
   if (amount !== undefined) update.amount = Number(amount);
-  if (category) update.category = String(category).trim();
   if (date) update.date = date;
   if (note !== undefined) update.note = String(note).trim();
 
+  if (type === "transfer" || (fromAccountId && toAccountId)) {
+    if (fromAccountId) update.fromAccountId = fromAccountId;
+    if (toAccountId) update.toAccountId = toAccountId;
+    update.category = "Transfer";
+    update.accountId = null;
+  } else {
+    if (category) update.category = String(category).trim();
+    if (accountId) update.accountId = accountId;
+  }
+
   const db = await getDb();
-  // userId filter here is what prevents one account from editing another's data.
   const result = await db
     .collection("transactions")
     .updateOne({ _id: objectId, userId }, { $set: update });
