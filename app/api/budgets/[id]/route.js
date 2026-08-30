@@ -4,6 +4,7 @@ import { getDb } from "../../../../lib/mongodb";
 import { getSessionUserId } from "../../../../lib/getSessionUser";
 
 export async function DELETE(request, { params }) {
+  const { id } = await params;
   const userId = await getSessionUserId();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -11,7 +12,7 @@ export async function DELETE(request, { params }) {
 
   let objectId;
   try {
-    objectId = new ObjectId(params.id);
+    objectId = new ObjectId(id);
   } catch {
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
