@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Plus, Trash2 } from "lucide-react";
 import Nav from "../../components/Nav";
 
 export default function TodosPage() {
@@ -62,43 +64,54 @@ export default function TodosPage() {
             placeholder="Add a to-do..."
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 rounded-lg border border-zinc-400 dark:border-surface-borderStrong dark:bg-surface-elevated dark:text-ink focus:outline-none focus:ring-2 focus:ring-accent"
           />
-          <button
+          <motion.button
+            whileTap={{ scale: 0.96 }}
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700"
+            className="flex items-center gap-1.5 bg-accent text-white px-4 py-2 rounded-lg font-medium hover:bg-accent-hover"
           >
+            <Plus size={16} strokeWidth={2} />
             Add
-          </button>
+          </motion.button>
         </form>
 
         {loading ? (
-          <p className="text-sm text-slate-400">Loading...</p>
+          <p className="text-sm text-zinc-400">Loading...</p>
         ) : (
           <>
             <ul className="space-y-2 mb-6">
+              <AnimatePresence>
               {pending.map((t) => (
-                <li
+                <motion.li
                   key={t._id}
-                  className="bg-white rounded-xl border border-slate-200 p-3 flex items-center gap-3"
+                  layout
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="bg-white dark:bg-surface-card rounded-xl border border-zinc-200 dark:border-surface-border p-3 flex items-center gap-3 transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={false}
                     onChange={() => toggleDone(t)}
-                    className="w-5 h-5"
+                    className="w-5 h-5 accent-purple-600"
                   />
-                  <span className="flex-1 text-sm">{t.text}</span>
+                  <span className="flex-1 text-sm text-zinc-950 dark:text-ink">
+                    {t.text}
+                  </span>
                   <button
                     onClick={() => handleDelete(t._id)}
-                    className="text-xs text-red-400"
+                    aria-label="Delete todo"
+                    className="text-red-300 hover:text-red-500"
                   >
-                    Delete
+                    <Trash2 size={14} strokeWidth={1.75} />
                   </button>
-                </li>
+                </motion.li>
               ))}
+              </AnimatePresence>
               {pending.length === 0 && (
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-zinc-400">
                   Nothing pending. Nice.
                 </p>
               )}
@@ -106,32 +119,39 @@ export default function TodosPage() {
 
             {done.length > 0 && (
               <>
-                <h2 className="text-sm font-semibold text-slate-400 mb-2">
+                <h2 className="text-sm font-semibold text-zinc-400 dark:text-ink0 mb-2">
                   Completed
                 </h2>
                 <ul className="space-y-2">
+                  <AnimatePresence>
                   {done.map((t) => (
-                    <li
+                    <motion.li
                       key={t._id}
-                      className="bg-slate-100 rounded-xl border border-slate-200 p-3 flex items-center gap-3"
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      className="bg-zinc-50 dark:bg-surface-elevated/60 rounded-xl border border-zinc-200 dark:border-surface-border p-3 flex items-center gap-3 transition-colors"
                     >
                       <input
                         type="checkbox"
                         checked={true}
                         onChange={() => toggleDone(t)}
-                        className="w-5 h-5"
+                        className="w-5 h-5 accent-purple-600"
                       />
-                      <span className="flex-1 text-sm line-through text-slate-400">
+                      <span className="flex-1 text-sm line-through text-zinc-400 dark:text-ink0">
                         {t.text}
                       </span>
                       <button
                         onClick={() => handleDelete(t._id)}
-                        className="text-xs text-red-400"
+                        aria-label="Delete todo"
+                        className="text-red-300 hover:text-red-500"
                       >
-                        Delete
+                        <Trash2 size={14} strokeWidth={1.75} />
                       </button>
-                    </li>
+                    </motion.li>
                   ))}
+                  </AnimatePresence>
                 </ul>
               </>
             )}
